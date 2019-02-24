@@ -57,45 +57,34 @@ namespace WebCrawler.Library
         /// </summary>
         private void ProceedCrawling()
         {
-            try
+            Console.WriteLine("Crawling started.");
+
+            while (_linksToVisit.Count != 0)
             {
-                // If we reached all links crawling is completed
-                if (_linksToVisit.Count == 0)
-                {     
-                    Console.WriteLine("Wooahh! Crawling completed.");
-                }
-                else
+                // dequeue the next link
+                _linksToVisit.TryDequeue(out string value);
+
+                // download HTML for a given link & extract urls from there
+                var uri = new Uri(value);
+                var htmlResult = _resourceDownloader.GetString(uri);
+                IEnumerable<string> currLinks = _resourceParser.ExtractLinks(htmlResult, uri);
+
+                // save HTML page to the disk
+                _resourseStorer.StoreAsHtml(htmlResult, uri, _options.DestinationPath);
+                _visitedLinks.Add(value);
+
+                // queue upcoming links
+                foreach (var link in currLinks)
                 {
-                    // dequeue the next link
-                    _linksToVisit.TryDequeue(out string value);
-
-                    Console.WriteLine(value);
-
-                    // download HTML for a given link & extract urls from there
-                    var uri = new Uri(value);
-                    var htmlResult = _resourceDownloader.GetString(uri);
-                    IEnumerable<string> currLinks = _resourceParser.ExtractLinks(htmlResult, uri);
-
-                    // save HTML page to the disk
-                    _resourseStorer.StoreAsHtml(htmlResult, uri, _options.DestinationPath);
-                    _visitedLinks.Add(value);
-
-                    // queue upcoming links
-                    foreach (var link in currLinks)
+                    if (!_visitedLinks.Contains(link) && !_linksToVisit.Contains(link))
                     {
-                        if (!_visitedLinks.Contains(link))
-                        {
-                            _linksToVisit.Enqueue(link);
-                        } 
+                        _linksToVisit.Enqueue(link);
+                        Console.WriteLine(link);
                     }
-                    
-                    ProceedCrawling();
-                }     
+                }
             }
-            catch (Exception e)
-            {
-                throw;
-            }
+
+            Console.WriteLine("Wooahh! Crawling completed.");
         }
     }
 }

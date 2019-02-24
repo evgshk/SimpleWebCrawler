@@ -9,7 +9,7 @@ namespace WebCrawler.App
         static void Main(string[] args)
         {
             // initialize our settings
-            var uriToStart = new Uri("http://neveling.net/");
+            var uriToStart = new Uri("https://mialkin.com/");
             var directoryToSave = new DirectoryInfo(@"C:\web-crawler-results\");
 
             // initialize WebCrawlerService
