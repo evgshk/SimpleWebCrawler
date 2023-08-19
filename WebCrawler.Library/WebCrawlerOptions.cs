@@ -1,19 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace WebCrawler.Library
 {
-    public class WebCrawlerOptions
-    {
-        public Uri Uri { get; }
-        public DirectoryInfo DestinationPath { get; }
-
-        public WebCrawlerOptions(Uri uri, DirectoryInfo path)
-        {
-            Uri = uri;
-            DestinationPath = path;
-        }
-    }
+    /// <summary> Web Crawler Options </summary>
+    /// <param name="Uri">Uri to start crawling from. </param>
+    /// <param name="DestinationPath">Destination path to save HTML pages. </param>
+    public record WebCrawlerOptions(Uri Uri, DirectoryInfo DestinationPath);
 }

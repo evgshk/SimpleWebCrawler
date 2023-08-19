@@ -1,23 +1,22 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using WebCrawler.Library;
+using WebCrawler.Library.Services;
 
 namespace WebCrawler.App
 {
-    class Program
+    internal static class Program
     {
-        static void Main(string[] args)
+        private static async Task Main(string[] args)
         {
-            // initialize our settings
-            var uriToStart = new Uri("https://mialkin.com/");
-            var directoryToSave = new DirectoryInfo(@"C:\web-crawler-results\");
-
-            // initialize WebCrawlerService
+            var uriToStart = new Uri("https://www.cp.pt/passageiros/pt");
+            var directoryToSave = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
+            
             var options = new WebCrawlerOptions(uriToStart, directoryToSave);
-            var crawlerService = new WebCrawlerService(options);
-
-            // go for it!
-            crawlerService.Execute();
+            var crawler = new WebCrawlerService(options);
+            
+            await crawler.Execute();
 
             Console.ReadLine();
         }
